@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/Raul/Desktop/School/CS 450/Hw1/sh.c
+stdlib.h
+-
+unistd.h
+-
+stdio.h
+-
+fcntl.h
+-
+string.h
+-
+assert.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+sys/wait.h
+-
+
