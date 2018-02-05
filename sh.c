@@ -44,7 +44,9 @@ struct cmd *parsecmd(char *);
 void
 runcmd(struct cmd *cmd) {
 	int p[2], r;
-	struct execcmd *excmd;
+	struct execcmd *ecmd;
+	struct pipecmd *pcmd;
+	struct redircmd *rcmd;
 
 	if (cmd == 0)
 		_exit(0);
@@ -55,25 +57,27 @@ runcmd(struct cmd *cmd) {
 			_exit(-1);
 
 		case ' ':
-			excmd = (struct execcmd*)cmd;
+			ecmd = (struct execcmd*)cmd;
 			char path1[100] = "/bin/";
 			char path2[100] = "/usr/bin/";
 			//exit if no command
-			if(excmd->argv[0] == 0)
+			if(ecmd->argv[0] == 0)
 				exit(0);
 			//try in cd. then try bin, etc.
-			execv(excmd->argv[0], excmd->argv);
-			execv(strcat(path1, excmd->argv[0]), excmd->argv);
-			execv(strcat(path2, excmd->argv[0]), excmd->argv);
+			execv(ecmd->argv[0], ecmd->argv);
+			execv(strcat(path1, ecmd->argv[0]), ecmd->argv);
+			execv(strcat(path2, ecmd->argv[0]), ecmd->argv);
 			//execv will only return if failed and will print failed
-			fprintf(stderr, "exec %s failed\n", excmd->argv[0]);
+			fprintf(stderr, "exec %s failed\n", ecmd->argv[0]);
 			break;
 
 		case '>':
 		case '<':
 			rcmd = (struct redircmd *) cmd;
-			fprintf(stderr, "redir not implemented\n");
-			// Your code here ...
+			close(rcmd->fd);
+			if(open(rcmd->file, rcmd->flags) < 0) {
+				fprintf(stderr, "open %s failed\n", rcmd->file);
+			}
 			runcmd(rcmd->cmd);
 			break;
 
